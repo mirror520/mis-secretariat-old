@@ -1,0 +1,25 @@
+<h2 mat-dialog-title>觸發郵件的裝置資訊</h2>
+<mat-table #table [dataSource]="dataSource">
+  <ng-container matColumnDef="fail_time">
+    <mat-header-cell *matHeaderCellDef> 觸發時間 </mat-header-cell>
+    <mat-cell *matCellDef="let row">{{ row.fail_time | date: "y/MM/dd HH:mm:ss" }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="user_agent">
+    <mat-header-cell *matHeaderCellDef> 郵件軟體 </mat-header-cell>
+    <mat-cell *matCellDef="let row">{{ row.user_agent }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="platform">
+    <mat-header-cell *matHeaderCellDef> 平台 </mat-header-cell>
+    <mat-cell *matCellDef="let row">{{ row.platform }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="device_type">
+    <mat-header-cell *matHeaderCellDef> 裝置類型 </mat-header-cell>
+    <mat-cell *matCellDef="let row">{{ row.device_type }}</mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="['fail_time', 'user_agent', 'platform', 'device_type']"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: ['fail_time', 'user_agent', 'platform', 'device_type']"></mat-row>
+</mat-table>

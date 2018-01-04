@@ -9,6 +9,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
@@ -24,7 +25,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { AppComponent } from './app.component';
 import { AuthGuardService } from './user/auth-guard.service';
 import { LoginComponent } from './user/login/login.component';
-import { SeitDashboardComponent } from './seit/dashboard/seit-dashboard.component';
+import { SeitDashboardComponent } from './seit/seit-dashboard.component';
+import { MailUserAgentDialogComponent } from './seit/dialog/mail-user-agent-dialog.component';
 import { UserService } from './user/user.service';
 import { VoteComponent } from './vote/vote.component';
 import { VoteResultComponent } from './vote/result/vote-result.component';
@@ -42,10 +44,12 @@ const appRoutes: Routes = [
     AppComponent,
     LoginComponent,
     SeitDashboardComponent,
+    MailUserAgentDialogComponent,
     VoteComponent,
     VoteResultComponent,
     ValidatorDirective
   ],
+  entryComponents: [MailUserAgentDialogComponent],
   imports: [
     BrowserAnimationsModule,
     CdkTableModule,
@@ -57,6 +61,7 @@ const appRoutes: Routes = [
     MatButtonModule,
     MatCardModule,
     MatChipsModule,
+    MatDialogModule,
     MatFormFieldModule,
     MatIconModule,
     MatListModule,

@@ -17,7 +17,7 @@ export class UserAgent {
         return this._fail_time;
     }
     public set fail_time(value: number) {
-        this._fail_time = value;
+        this._fail_time = value * 1000;
     }
 
     public get user_agent(): string {

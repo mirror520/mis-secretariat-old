@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -8,15 +9,16 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/concatMap';
 import 'rxjs/add/operator/delay';
 
-import { SeitService, MailDataSource } from '../seit.service';
-import { UserService } from '../../user/user.service';
-import { User } from '../../user/model/user';
-import { Token } from '../../user/model/token';
-import { Result } from '../../user/model/result';
-import { Institution } from '../model/institution';
-import { Department } from '../model/department';
-import { Mail } from '../model/mail';
-import { UserAgent } from '../model/user-agent';
+import { MailUserAgentDialogComponent } from './dialog/mail-user-agent-dialog.component';
+import { SeitService, MailDataSource } from './seit.service';
+import { UserService } from '../user/user.service';
+import { User } from '../user/model/user';
+import { Token } from '../user/model/token';
+import { Result } from '../user/model/result';
+import { Institution } from './model/institution';
+import { Department } from './model/department';
+import { Mail } from './model/mail';
+import { UserAgent } from './model/user-agent';
 
 @Component({
   selector: 'app-seit-dashboard',
@@ -36,7 +38,8 @@ export class SeitDashboardComponent implements OnInit {
   public dataSource: MailDataSource;
 
   constructor(private seitService: SeitService,
-              private userService: UserService) { }
+              private userService: UserService,
+              private dialog: MatDialog) { }
 
   ngOnInit() {
     this.getMails();
@@ -119,21 +122,11 @@ export class SeitDashboardComponent implements OnInit {
                     });
   }
 
-  getMailUserAgent(mail: Mail) {
-    this.seitService.getMailUserAgent(mail)
-                    .subscribe({
-                      next: (value) => console.log(value),
-                      error: (error: HttpErrorResponse) => {
-                        if (error.status === 401) {
-                          if ((this.currentUser != null) &&
-                              (this.currentUser.token.expiresIn > new Date())) {
-                            this.nextMethod = this.getMailUserAgent;
-                            this.parameter = mail;
-                            this.refreshToken(this.currentUser);
-                          }
-                        }
-                      }
-                    });
+  openMailUserAgentDialog(mail: Mail) {
+    const dialogRef = this.dialog.open(MailUserAgentDialogComponent, {
+      width: '80%',
+      data: { mail: mail }
+    });
   }
 
   refreshToken(user: User) {

@@ -49,7 +49,7 @@ export class SeitService {
                     .map((value: Mail) => Object.assign(new Mail(), value));
   }
 
-  getMailUserAgent(mail: Mail): Observable<UserAgent[]> {
+  getMailUserAgents(mail: Mail): Observable<UserAgent[]> {
     const token = (this.userService.currentUser != null) ? this.userService.currentUser.token.access_token : null;
     return this.http.get(this.baseUrl + `/seit/mails/${mail.mid}/ua`,
                            { headers: new HttpHeaders().set('Authorization', `Bearer ${token}`) })
@@ -68,6 +68,16 @@ export class MailDataSource extends DataSource<any> {
     super();
   }
   connect(): Observable<Mail[]> {
+    return this.subject;
+  }
+  disconnect() {}
+}
+
+export class MailUserAgentDataSource extends DataSource<any> {
+  constructor(private subject: BehaviorSubject<UserAgent[]>) {
+    super();
+  }
+  connect(): Observable<UserAgent[]> {
     return this.subject;
   }
   disconnect() {}

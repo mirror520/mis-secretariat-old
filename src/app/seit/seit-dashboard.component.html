@@ -50,7 +50,7 @@
           <mat-cell *matCellDef="let row">
             <a *ngIf="row.fail_time!=0" 
                class="fail_time" 
-               (click)="getMailUserAgent(row)">
+               (click)="openMailUserAgentDialog(row)">
                {{row.fail_time | date: "y/MM/dd HH:mm:ss"}}
             </a>
           </mat-cell>
