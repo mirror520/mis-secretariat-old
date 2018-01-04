@@ -1,0 +1,96 @@
+<main>
+  <mat-card>
+    <mat-card-content>
+      <button mat-raised-button (click)="startScheduleSendMails()">開始寄信</button>
+    </mat-card-content>
+  </mat-card>
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>請選擇機關</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <button mat-button *ngFor="let institution of institutions" 
+                         (click)="currentInstitution = institution">
+        {{institution.institution}}
+      </button>
+    </mat-card-content>
+  </mat-card>
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>請選擇單位</mat-card-title>
+    </mat-card-header>
+    <mat-card-content *ngIf="currentInstitution">
+      <button mat-button *ngFor="let department of currentInstitution.departments"
+                         (click)="currentDepartment = department">{{department.department}}</button>
+    </mat-card-content>
+  </mat-card>
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>測試郵件列表</mat-card-title>
+    </mat-card-header> 
+    <mat-card-content> 
+      <mat-table #table [dataSource]="dataSource">
+        <ng-container matColumnDef="mid">
+          <mat-header-cell *matHeaderCellDef> # </mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.mid}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="recipient">
+          <mat-header-cell *matHeaderCellDef> 接收者 </mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.recipient.recipient}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="delivery_time">
+          <mat-header-cell *matHeaderCellDef> 傳送時間 </mat-header-cell>
+          <mat-cell *matCellDef="let row">{{ (row.delivery_time) ? (row.delivery_time | date: "y/MM/dd HH:mm:ss") : "" }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="fail_time">
+          <mat-header-cell *matHeaderCellDef> 觸發時間 </mat-header-cell>
+          <mat-cell *matCellDef="let row">
+            <a *ngIf="row.fail_time!=0" 
+               class="fail_time" 
+               (click)="getMailUserAgent(row)">
+               {{row.fail_time | date: "y/MM/dd HH:mm:ss"}}
+            </a>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="mail_status">
+          <mat-header-cell *matHeaderCellDef> 郵件狀態 </mat-header-cell>
+          <mat-cell *matCellDef="let row"
+                    [ngSwitch]="row.mail_status">
+            <mat-chip-list>
+              <mat-chip *ngSwitchCase="'ready'">準備中</mat-chip>
+              <mat-chip *ngSwitchCase="'delivered'" color="accent" selected="true">已傳送</mat-chip>
+              <mat-chip *ngSwitchCase="'failure'" color="warn" selected="true">傳送失敗</mat-chip>
+              <mat-chip *ngSwitchCase="'readed'" color="warn" selected="true">已讀取</mat-chip>
+            </mat-chip-list>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="test_status">
+          <mat-header-cell *matHeaderCellDef> 測試狀態 </mat-header-cell>
+          <mat-cell *matCellDef="let row"
+                    [ngSwitch]="row.test_status">
+            <mat-chip-list>
+              <mat-chip *ngSwitchCase="'unknown'">未知</mat-chip>
+              <mat-chip *ngSwitchCase="'fail'" color="warn" selected="true">失敗</mat-chip>
+              <mat-chip *ngSwitchCase="'correct'" color="accent" selected="true">已修正</mat-chip>
+            </mat-chip-list>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+          <mat-header-cell *matHeaderCellDef> 動作 </mat-header-cell>
+          <mat-cell *matCellDef="let row">
+            <button mat-button *ngIf="row.test_status=='fail'" (click)="updateMail(row)">修正</button>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="['mid', 'recipient', 'delivery_time', 'fail_time', 'mail_status', 'test_status', 'action']"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: ['mid', 'recipient', 'delivery_time', 'fail_time', 'mail_status', 'test_status', 'action']"></mat-row>
+      </mat-table>
+    </mat-card-content>
+  </mat-card>  
+</main>

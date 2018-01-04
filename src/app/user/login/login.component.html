@@ -1,0 +1,46 @@
+<main>
+  <h2>請選擇登入方式</h2>
+  <mat-tab-group (selectChange)="selectChangeHandler($event)">
+    <mat-tab label="公務帳號">
+      <form id="user-login-form" [formGroup]="userLoginFormGroup"
+            (ngSubmit)="loginUserByTccg(account.value, password.value)">
+        <mat-form-field>
+          <input #account matInput placeholder="公務帳號" formControlName="account">
+          <span matSuffix>@taichung.gov.tw</span>
+        </mat-form-field>
+        <mat-form-field>
+          <input #password matInput placeholder="密碼" formControlName="password"
+                 [type]="hide ? 'password' : 'text'">
+          <mat-icon matSuffix (click)="hide = !hide">{{ hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+          <mat-hint>提示：同開機密碼</mat-hint>
+        </mat-form-field>
+        <button mat-raised-button [disabled]="userLoginFormGroup.invalid">登入</button> 
+      </form>
+      <div *ngIf="currentUser">
+        <pre>{{ currentUser | json }}</pre>
+      </div>
+      <div *ngIf="failureResult">
+        <pre>{{ failureResult | json }}</pre>
+      </div>
+    </mat-tab>
+    <mat-tab label="自然人憑證">
+      <form id="mocia-login-form" 
+            (ngSubmit)="loginUserByMocia(pincode)">
+        <mat-select *ngIf="pkcs11Info" 
+                    placeholder="Selct Card" name="slot.token?.serialNumber" 
+                    [(ngModel)]="selectedValue">
+          <mat-option *ngFor="let slot of pkcs11Info.slots" 
+                      [value]="slot.token?.serialNumber">
+            {{ slot.token?.serialNumber + " (Reader: " + slot.slotDescription + ")" }}
+          </mat-option>
+        </mat-select>
+        <mat-form-field>
+          <input #pincode matInput placeholder="PIN Code" type="password">
+        </mat-form-field>
+        <button mat-raised-button>登入</button>
+      </form>
+      <p>註：自然人憑證跨平台元件尚未支援CORS跨網域存取，如需使用請安裝Google Chrome擴充套件CORS Toggle。</p>
+      <pre>{{ pkcs11Info | json }}</pre>
+    </mat-tab>
+  </mat-tab-group>
+</main>

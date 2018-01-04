@@ -1,0 +1,31 @@
+<main>
+  <mat-card *ngIf="this.isLoggedIn">
+    <mat-card-header>
+      <mat-card-title>投票結果</mat-card-title>
+    </mat-card-header> 
+    <mat-card-content> 
+      <mat-table #table [dataSource]="dataSource">
+        <ng-container matColumnDef="vcid">
+          <mat-header-cell *matHeaderCellDef> # </mat-header-cell>
+          <mat-cell *matCellDef="let row">{{ row.vcid }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="candidate">
+          <mat-header-cell *matHeaderCellDef> 候選人 </mat-header-cell>
+          <mat-cell *matCellDef="let row">{{ row.candidate }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="result">
+          <mat-header-cell *matHeaderCellDef> 得票數 </mat-header-cell>
+          <mat-cell *matCellDef="let row">{{ row.result }}</mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="['vcid', 'candidate', 'result']"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: ['vcid', 'candidate', 'result']"></mat-row>
+      </mat-table>
+    </mat-card-content>
+    <div>
+      <button *ngIf="this.isLoggedIn" mat-button routerLink="/vote">返回上一頁</button>
+    </div>
+  </mat-card>  
+</main>

@@ -1,0 +1,44 @@
+<mat-sidenav-container fullscreen>
+  <header>
+    <mat-toolbar id="toolbar" color="primary">
+      <button mat-icon-button  matTooltip="開啟選單"
+              [style.display]="(width > 1440) ? 'none' : 'flex'"
+              (click)="sidenav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      {{title}}
+      <span class="spacer"></span>
+      <button mat-icon-button matTooltip="搜尋">
+        <mat-icon>search</mat-icon>
+      </button>
+      <button *ngIf="!isLoggedIn" mat-button routerLink="/login">登入</button>
+      <button *ngIf="isLoggedIn" mat-button (click)="logout()">登出</button>
+    </mat-toolbar>
+  </header>
+
+  <mat-sidenav #sidenav id="sidenav"
+               [mode]="(width > 1440) ? 'side' : 'over'" 
+               [opened]="(width > 1440) ? true : false">
+    <span id="logo">
+      資訊管理系統<br>
+      <span *ngIf="currentUser">{{currentUser.name + currentUser.title}}，您好！</span>
+    </span>
+    <mat-nav-list>
+      <a mat-list-item routerLink="/vote">考績委員會委員投票</a>
+      <a mat-list-item routerLink="/seit">社交工程演練</a>
+      <!--<a mat-list-item>民眾預約導覽</a>
+      <a mat-list-item>公報資訊管理</a>
+      <a mat-list-item>姊妹市暨友好城市</a>
+      <a mat-list-item>線上簽核系統</a>-->
+      <a mat-list-item href="https://api.secret.taichung.gov.tw/docs" target="_blank">取得 API 文件</a>
+    </mat-nav-list>
+    <div id="legal">
+      &copy;2018 臺中市政府秘書處
+      <a mat-icon-button href="https://github.com/mirror520/mis-secretariat" target="_blank">
+        <mat-icon svgIcon="mark-github"></mat-icon>
+      </a>
+    </div>
+  </mat-sidenav>
+
+   <router-outlet></router-outlet> 
+</mat-sidenav-container>

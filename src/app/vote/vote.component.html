@@ -1,0 +1,81 @@
+<main>
+  <mat-vertical-stepper linear>
+    <mat-step label="驗證您的身份" [stepControl]="firstFormGroup">
+      <div>
+        <button *ngIf="this.isLoggedIn" mat-button routerLink="/vote/result" color="primary">觀看投票結果</button>
+        <button *ngIf="!this.isLoggedIn" mat-raised-button (click)="login()">請先登入您的公務帳號</button>
+      </div>
+      <form *ngIf="this.isLoggedIn" [formGroup]="firstFormGroup">
+        <mat-form-field>
+          <input matInput placeholder="姓名" formControlName="name">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput placeholder="科室" formControlName="department">
+          <mat-error *ngIf="firstFormGroup.get('department').errors?.nomatch">
+            您的資格不符
+          </mat-error>
+        </mat-form-field>
+        <div>
+          <mat-form-field>
+            <input matInput placeholder="時間" formControlName="timer" autofocus
+                   value="{{today | async | date: 'yyyy-MM-dd HH:mm:ss a'}}">
+            <mat-error *ngIf="firstFormGroup.get('timer').errors?.unopened">
+              投票尚未開始
+            </mat-error>
+            <mat-error *ngIf="firstFormGroup.get('timer').errors?.closed">
+              投票已截止，請等待投票結果
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div>
+          <button mat-button matStepperNext [disabled]="firstFormGroup.invalid || submitted">
+            下一步：選擇候選人
+          </button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step label="選擇候選人" [stepControl]="secondFormGroup">
+      <form [formGroup]="secondFormGroup">
+        <mat-form-field>
+          <input matInput placeholder="候選人" [matAutocomplete]="auto" formControlName="candidate">
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let candidate of filteredCandidates | async" [value]="candidate.candidate" 
+                        (onSelectionChange)="selectionChangeHandler(candidate)">
+              <span>{{ candidate.candidate }}</span> | 
+              <small>編號: {{ candidate.vcid }}</small>
+            </mat-option>
+          </mat-autocomplete>
+          <mat-error *ngIf="secondFormGroup.get('candidate').errors?.nomatch">
+            請選擇名單內的人員
+          </mat-error>
+          <mat-error *ngIf="secondFormGroup.get('candidate').errors?.required">
+            請至少選擇一位候選人
+          </mat-error>
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperPrevious [disabled]="submitted">回上一步</button>
+          <button mat-button matStepperNext [disabled]="secondFormGroup.invalid || submitted" 
+                                            (click)="checkCurrentCandidate(secondFormGroup.get('candidate').value)">
+            下一步：確定投票
+          </button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step label="確定投票">
+      <div>
+        您是 {{ this.currentUser?.name }}，<br/>
+        您確定要將票投給 {{ this.currentCandidate?.candidate }} 嗎？
+      </div>
+      <div>
+        <button mat-button matStepperPrevious [disabled]="submitted">再想看看</button>
+        <button mat-button matStepperNext [disabled]="submitted"
+                (click)="voting()">確定投票</button>
+      </div>
+    </mat-step>
+    <mat-step label="完成">
+      <div *ngIf="votingResult">
+        <pre>{{ votingResult | json}}</pre>
+      </div>
+    </mat-step>
+  </mat-vertical-stepper>
+</main>
