@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 
+import { Config } from '../shared/model/config';
 import { User } from './model/user';
 import { Token } from './model/token';
 
@@ -13,7 +14,7 @@ export class UserService {
   private static _isLoggedIn = false;
   private static _redirectUrl = null;
 
-  private baseUrl = 'https://api.secret.taichung.gov.tw/v1.0';
+  private baseUrl = Config.baseUrl;
 
   constructor(private http: HttpClient) { }
 

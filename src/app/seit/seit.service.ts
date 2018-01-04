@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
+import { Config } from '../shared/model/config';
 import { UserService } from '../user/user.service';
 import { Institution } from './model/institution';
 import { Mail } from './model/mail';
@@ -13,7 +14,7 @@ import { Result } from '../user/model/result';
 
 @Injectable()
 export class SeitService {
-  private baseUrl = 'https://api.secret.taichung.gov.tw/v1.0';
+  private baseUrl = Config.baseUrl;
 
   constructor(private http: HttpClient,
               private userService: UserService) { }

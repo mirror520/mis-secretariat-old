@@ -5,6 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/map';
 
+import { Config } from '../shared/model/config';
 import { UserService } from '../user/user.service';
 import { User } from '../user/model/user';
 import { Result } from '../user/model/result';
@@ -14,7 +15,7 @@ import { Result as VoteResult } from './model/result';
 
 @Injectable()
 export class VoteService {
-  private baseUrl = 'https://api.secret.taichung.gov.tw/v1.0';
+  private baseUrl = Config.baseUrl;
 
   constructor(private http: HttpClient,
               private userService: UserService) { }
